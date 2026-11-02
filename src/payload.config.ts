@@ -11,6 +11,7 @@ import { DocumentTypes } from './collections/DocumentTypes'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { getServerSideURL } from './utilities/getURL'
+import { acroDocumentEndpoints } from './endpoints/acro-documents'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 const filename = fileURLToPath(import.meta.url)
@@ -38,6 +39,7 @@ export default buildConfig({
     Media,
   ],
   cors: [getServerSideURL()].filter(Boolean),
+  endpoints: [...acroDocumentEndpoints],
   plugins: [
     vercelBlobStorage({
       collections: { media: true },
