@@ -6,7 +6,6 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 import path from 'path'
-import { createFolderField } from 'payload'
 import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
@@ -28,7 +27,6 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
     },
-    createFolderField({ relationTo: 'folders' }),
     {
       name: 'caption',
       type: 'richText',
