@@ -9,6 +9,7 @@ type Relation = {
   url?: string | null
   filename?: string
   title?: string
+  documentNumber?: string
   name?: string
   parent?: Relation | string | number | null
 }
