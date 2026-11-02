@@ -1,35 +1,35 @@
 import type { CollectionConfig } from 'payload'
 
-import path from 'path'
-import { fileURLToPath } from 'url'
-
-import { anyone } from '../access/anyone'
-import { authenticated } from '../access/authenticated'
-
-const filename = fileURLToPath(import.meta.url)
-const dirname = path.dirname(filename)
+import { canManageDocuments, readPublicMedia } from '../access/documentAccess'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    create: canManageDocuments,
+    delete: canManageDocuments,
+    read: readPublicMedia,
+    update: canManageDocuments,
   },
   admin: {
     useAsTitle: 'filename',
-    defaultColumns: ['filename', 'mimeType', 'filesize', 'createdAt'],
+    defaultColumns: ['filename', 'mimeType', 'filesize', 'isPublic', 'createdAt'],
     description: 'PDF files attached to aviation document revisions.',
   },
   fields: [
+    { name: 'description', type: 'textarea' },
     {
-      name: 'description',
-      type: 'textarea',
+      name: 'isPublic',
+      type: 'checkbox',
+      defaultValue: false,
+      access: { update: () => false },
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Automatically enabled when a revision is published.',
+      },
     },
   ],
   upload: {
-    staticDir: path.resolve(dirname, '../../public/media'),
     mimeTypes: ['application/pdf'],
   },
 }
