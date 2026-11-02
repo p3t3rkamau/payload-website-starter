@@ -40,6 +40,21 @@ export const Categories: CollectionConfig = {
       },
     },
     {
+      name: 'parent',
+      type: 'relationship',
+      relationTo: 'categories',
+      admin: {
+        position: 'sidebar',
+        description: 'Parent folder. Leave empty for a top-level folder such as DASH 400.',
+      },
+    },
+    {
+      name: 'sortOrder',
+      type: 'number',
+      defaultValue: 0,
+      admin: { position: 'sidebar' },
+    },
+    {
       name: 'department',
       type: 'select',
       options: [
