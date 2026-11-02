@@ -121,9 +121,19 @@ export const Pages: CollectionConfig = {
     },
     {
       name: 'slug',
-      type: 'slug',
-      useAsSlug: 'title',
-    },
+      type: 'text',
+      admin: { position: 'sidebar' },
+      hooks: {
+        beforeValidate: [
+          ({ data, value }) => {
+            if (typeof value === 'string' && value.trim()) return value
+            const title = data?.title
+            return typeof title === 'string'
+              ? title.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+              : value
+          },
+        ],
+      },},
   ],
   hooks: {
     afterChange: [revalidatePage],
