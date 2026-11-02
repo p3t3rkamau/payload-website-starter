@@ -1,15 +1,17 @@
 import type { CollectionConfig } from 'payload'
 
-import { authenticated } from '../access/authenticated'
-import { anyone } from '../access/anyone'
+import {
+  canManageDocuments,
+  readPublishedDocuments,
+} from '../access/documentAccess'
 
 export const Documents: CollectionConfig = {
   slug: 'documents',
   access: {
-    create: authenticated,
-    delete: authenticated,
-    read: anyone,
-    update: authenticated,
+    create: canManageDocuments,
+    delete: canManageDocuments,
+    read: readPublishedDocuments,
+    update: canManageDocuments,
   },
   admin: {
     useAsTitle: 'title',
@@ -17,11 +19,7 @@ export const Documents: CollectionConfig = {
     description: 'A permanent manual/document record. Each uploaded revision is stored separately.',
   },
   fields: [
-    {
-      name: 'title',
-      type: 'text',
-      required: true,
-    },
+    { name: 'title', type: 'text', required: true },
     {
       name: 'documentNumber',
       type: 'text',
@@ -36,30 +34,19 @@ export const Documents: CollectionConfig = {
       hasMany: true,
       required: true,
     },
-    {
-      name: 'category',
-      type: 'relationship',
-      relationTo: 'categories',
-      required: true,
-    },
-    {
-      name: 'documentType',
-      type: 'relationship',
-      relationTo: 'document-types',
-      required: true,
-    },
-    {
-      name: 'description',
-      type: 'textarea',
-    },
+    { name: 'category', type: 'relationship', relationTo: 'categories', required: true },
+    { name: 'documentType', type: 'relationship', relationTo: 'document-types', required: true },
+    { name: 'description', type: 'textarea' },
     {
       name: 'currentRevision',
       type: 'relationship',
       relationTo: 'document-revisions',
       admin: {
         position: 'sidebar',
-        description: 'Set this to the latest approved revision when it is published.',
+        readOnly: true,
+        description: 'Updated automatically when a revision is published.',
       },
+      access: { update: () => false },
     },
     {
       name: 'status',
