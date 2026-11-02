@@ -13,6 +13,8 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    defaultColumns: ['title', 'department', 'series', 'updatedAt'],
+    description: 'Folder hierarchy used to organise aviation documents.',
   },
   fields: [
     {
@@ -23,6 +25,7 @@ export const Categories: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      unique: true,
       admin: { position: 'sidebar' },
       hooks: {
         beforeValidate: [
@@ -35,6 +38,37 @@ export const Categories: CollectionConfig = {
           },
         ],
       },
+    },
+    {
+      name: 'department',
+      type: 'select',
+      options: [
+        { label: 'Flight Operations', value: 'flight-operations' },
+        { label: 'Maintenance', value: 'maintenance' },
+        { label: 'General', value: 'general' },
+      ],
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'series',
+      type: 'select',
+      options: [
+        { label: 'DASH 100', value: 'dash-100' },
+        { label: 'DASH 200', value: 'dash-200' },
+        { label: 'DASH 300', value: 'dash-300' },
+        { label: 'DASH 400', value: 'dash-400' },
+      ],
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+    },
+    {
+      name: 'isActive',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: { position: 'sidebar' },
     },
   ],
 }
