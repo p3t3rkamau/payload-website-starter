@@ -1,5 +1,6 @@
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import path from 'path'
+import sharp from 'sharp'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
@@ -9,7 +10,13 @@ import { DocumentRevisions } from './collections/DocumentRevisions'
 import { Documents } from './collections/Documents'
 import { DocumentTypes } from './collections/DocumentTypes'
 import { Media } from './collections/Media'
+import { Pages } from './collections/Pages'
+import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
+import { Footer } from './Footer/config'
+import { Header } from './Header/config'
+import { plugins } from './plugins'
+import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { acroDocumentEndpoints } from './endpoints/acro-documents'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
@@ -19,11 +26,23 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
+    components: {
+      beforeLogin: ['@/components/BeforeLogin'],
+      beforeDashboard: ['@/components/BeforeDashboard'],
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },
     user: Users.slug,
+    livePreview: {
+      breakpoints: [
+        { label: 'Mobile', name: 'mobile', width: 375, height: 667 },
+        { label: 'Tablet', name: 'tablet', width: 768, height: 1024 },
+        { label: 'Desktop', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
+  editor: defaultLexical,
   db: vercelPostgresAdapter({
     pool: {
       connectionString: process.env.POSTGRES_URL || '',
@@ -37,10 +56,14 @@ export default buildConfig({
     Documents,
     DocumentRevisions,
     Media,
+    Pages,
+    Posts,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   endpoints: [...acroDocumentEndpoints],
+  globals: [Header, Footer],
   plugins: [
+    ...plugins,
     vercelBlobStorage({
       collections: { media: true },
       clientUploads: true,
@@ -48,6 +71,7 @@ export default buildConfig({
     }),
   ],
   secret: process.env.PAYLOAD_SECRET || '',
+  sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },

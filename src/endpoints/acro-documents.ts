@@ -12,6 +12,8 @@ type Relation = {
   documentNumber?: string
   name?: string
   parent?: Relation | string | number | null
+  category?: Relation | string | number | null
+  aircraft?: unknown
 }
 
 const relation = (value: unknown): Relation | null =>

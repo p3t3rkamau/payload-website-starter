@@ -29,7 +29,7 @@ export const Users: CollectionConfig = {
         { label: 'Document Editor', value: 'editor' },
         { label: 'Reviewer / Publisher', value: 'reviewer' },
       ],
-      access: { update: isAdmin },
+      access: { update: ({ req }) => isAdmin({ req }) as boolean },
       admin: {
         position: 'sidebar',
         description: 'Controls access to document uploads, review and publishing.',

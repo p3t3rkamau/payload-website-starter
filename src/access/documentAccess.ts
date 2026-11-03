@@ -1,4 +1,4 @@
-import type { Access } from 'payload'
+import type { Access, Where } from 'payload'
 
 type UserWithRole = {
   role?: 'admin' | 'editor' | 'reviewer'
@@ -32,5 +32,9 @@ export const readPublishedDocuments: Access = ({ req }) => {
 
 export const readPublicMedia: Access = ({ req }) => {
   if (req.user) return true
-  return { isPublic: { equals: true } }
+  // PDFs are only public once a revision is published; website images are always public
+  const publicMedia: Where = {
+    or: [{ isPublic: { equals: true } }, { mimeType: { contains: 'image/' } }],
+  }
+  return publicMedia
 }
