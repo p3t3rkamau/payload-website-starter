@@ -5,6 +5,7 @@ import type {
 } from 'payload'
 
 import {
+  canManageDocuments,
   canReviewDocuments,
   readPublishedRevisions,
 } from '../access/documentAccess'
