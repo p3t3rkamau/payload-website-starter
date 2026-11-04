@@ -32,9 +32,6 @@ export const readPublishedDocuments: Access = ({ req }) => {
 
 export const readPublicMedia: Access = ({ req }) => {
   if (req.user) return true
-  // PDFs are only public once a revision is published; website images are always public
-  const publicMedia: Where = {
-    or: [{ isPublic: { equals: true } }, { mimeType: { contains: 'image/' } }],
-  }
+  const publicMedia: Where = { isPublic: { equals: true } }
   return publicMedia
 }
