@@ -1,0 +1,46 @@
+name: Payload dependency upgrade
+
+on:
+  push:
+    branches:
+      - feat/private-blob-storage-foundation
+    paths-ignore:
+      - package-lock.json
+
+permissions:
+  contents: write
+
+jobs:
+  lockfile-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout upgrade branch
+        uses: actions/checkout@v4
+        with:
+          ref: feat/private-blob-storage-foundation
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Regenerate npm lockfile
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Commit regenerated lockfile
+        run: |
+          if ! git diff --quiet -- package-lock.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore: regenerate lockfile for Payload 3.93.0"
+            git push origin HEAD:feat/private-blob-storage-foundation
+          fi
+
+      - name: Install exact locked dependencies
+        run: npm ci
+
+      - name: Build Payload backend
+        run: npm run build
