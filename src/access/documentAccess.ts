@@ -1,4 +1,4 @@
-import type { Access, Where } from 'payload'
+import type { Access } from 'payload'
 
 type UserWithRole = {
   role?: 'admin' | 'editor' | 'reviewer'
@@ -20,18 +20,12 @@ export const canManageDocuments: Access = ({ req }) =>
 export const canReviewDocuments: Access = ({ req }) =>
   ['admin', 'editor', 'reviewer'].includes(getRole(req.user) || '')
 
-export const readPublishedRevisions: Access = ({ req }) => {
-  if (req.user) return true
-  return { status: { in: ['published', 'superseded'] } }
-}
+// Publishing controls catalogue visibility; it never grants anonymous access.
+export const readPublishedRevisions: Access = ({ req }) =>
+  canReviewDocuments({ req } as Parameters<Access>[0])
 
-export const readPublishedDocuments: Access = ({ req }) => {
-  if (req.user) return true
-  return { status: { equals: 'active' } }
-}
+export const readPublishedDocuments: Access = ({ req }) =>
+  canReviewDocuments({ req } as Parameters<Access>[0])
 
-export const readPublicMedia: Access = ({ req }) => {
-  if (req.user) return true
-  const publicMedia: Where = { isPublic: { equals: true } }
-  return publicMedia
-}
+export const readPrivateMedia: Access = ({ req }) =>
+  canReviewDocuments({ req } as Parameters<Access>[0])
