@@ -69,13 +69,6 @@ const publishRevision: CollectionAfterChangeHook = async ({
     throw new Error('A published revision must have a linked PDF and document.')
   }
 
-  await req.payload.update({
-    collection: 'media',
-    id: fileID,
-    data: { isPublic: true },
-    overrideAccess: true,
-  })
-
   const parent = await req.payload.findByID({
     collection: 'documents',
     id: documentID,
