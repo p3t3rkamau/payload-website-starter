@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import {
   canManageDocuments,
-  readPublishedDocuments,
+  canReviewDocuments,
 } from '../access/documentAccess'
 
 export const Documents: CollectionConfig = {
@@ -10,7 +10,7 @@ export const Documents: CollectionConfig = {
   access: {
     create: canManageDocuments,
     delete: canManageDocuments,
-    read: readPublishedDocuments,
+    read: canReviewDocuments,
     update: canManageDocuments,
   },
   admin: {
