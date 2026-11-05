@@ -1,19 +1,19 @@
 import type { CollectionConfig } from 'payload'
 
-import { canManageDocuments, readPublicMedia } from '../access/documentAccess'
+import { canManageDocuments, readPrivateMedia } from '../access/documentAccess'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     create: canManageDocuments,
     delete: canManageDocuments,
-    read: readPublicMedia,
+    read: readPrivateMedia,
     update: canManageDocuments,
   },
   admin: {
     useAsTitle: 'filename',
-    defaultColumns: ['filename', 'mimeType', 'filesize', 'isPublic', 'createdAt'],
-    description: 'PDF files attached to aviation document revisions.',
+    defaultColumns: ['filename', 'mimeType', 'filesize', 'createdAt'],
+    description: 'Private PDF files attached to aviation document revisions.',
   },
   fields: [
     {
@@ -21,14 +21,14 @@ export const Media: CollectionConfig = {
       type: 'textarea',
     },
     {
+      // Retained for backwards-compatible database schema; never enables public access.
       name: 'isPublic',
       type: 'checkbox',
       defaultValue: false,
-      access: { update: () => false },
+      access: { read: () => false, update: () => false },
       admin: {
-        position: 'sidebar',
+        hidden: true,
         readOnly: true,
-        description: 'Automatically enabled when a revision is published.',
       },
     },
   ],
