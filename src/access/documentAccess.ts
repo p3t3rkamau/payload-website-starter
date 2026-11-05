@@ -21,11 +21,11 @@ export const canReviewDocuments: Access = ({ req }) =>
   ['admin', 'editor', 'reviewer'].includes(getRole(req.user) || '')
 
 // Publishing controls catalogue visibility; it never grants anonymous access.
-export const readPublishedRevisions: Access = ({ req }) =>
-  canReviewDocuments({ req } as Parameters<Access>[0])
+const isStaff = (user: unknown) =>
+  ['admin', 'editor', 'reviewer'].includes(getRole(user) || '')
 
-export const readPublishedDocuments: Access = ({ req }) =>
-  canReviewDocuments({ req } as Parameters<Access>[0])
+export const readPublishedRevisions: Access = ({ req }) => isStaff(req.user)
 
-export const readPrivateMedia: Access = ({ req }) =>
-  canReviewDocuments({ req } as Parameters<Access>[0])
+export const readPublishedDocuments: Access = ({ req }) => isStaff(req.user)
+
+export const readPrivateMedia: Access = ({ req }) => isStaff(req.user)
