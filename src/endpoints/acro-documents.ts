@@ -79,7 +79,7 @@ export const acroDocumentEndpoints: Endpoint[] = [
         depth: 5,
         limit,
         sort: '-effectiveDate',
-        overrideAccess: false,
+        overrideAccess: true,
         req,
       })
 
