@@ -52,12 +52,6 @@ const getCategoryNodes = (categoryValue: unknown, series: string) => {
   return nodes
 }
 
-const getMedia = (value: unknown) => {
-  const media = relation(value)
-  if (!media?.url) return null
-  return { url: media.url, filename: media.filename }
-}
-
 export const acroDocumentEndpoints: Endpoint[] = [
   {
     path: '/acro-documents',
@@ -91,8 +85,7 @@ export const acroDocumentEndpoints: Endpoint[] = [
 
       const docs = result.docs.flatMap((revision) => {
         const document = relation(revision.document)
-        const media = getMedia(revision.file)
-        if (!document || !media) return []
+        if (!document) return []
 
         const category = relation(document.category)
         return getAircraftSeries(document.aircraft)
@@ -110,7 +103,8 @@ export const acroDocumentEndpoints: Endpoint[] = [
               aircraft: series,
               folderPath: folderNodes.map((node) => node.slug).join('/'),
               folderNodes,
-              pdfFile: media,
+              // Never expose the uploaded file URL from this catalogue endpoint.
+              // PDF delivery must go through a separately authorized, range-aware route.
               changeSummary: revision.changeSummary ?? null,
               publishedAt: revision.publishedAt ?? null,
               category: category
