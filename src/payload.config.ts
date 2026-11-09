@@ -10,6 +10,9 @@ import { DocumentRevisions } from './collections/DocumentRevisions'
 import { Documents } from './collections/Documents'
 import { DocumentTypes } from './collections/DocumentTypes'
 import { Media } from './collections/Media'
+import { Organisations } from './collections/Organisations'
+import { OrganisationMemberships } from './collections/OrganisationMemberships'
+import { AircraftEntitlements } from './collections/AircraftEntitlements'
 import { Users } from './collections/Users'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
@@ -35,6 +38,9 @@ export default buildConfig({
   }),
   collections: [
     Users,
+    Organisations,
+    OrganisationMemberships,
+    AircraftEntitlements,
     Aircraft,
     Categories,
     DocumentTypes,
