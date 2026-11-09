@@ -20,6 +20,21 @@ export const Users: CollectionConfig = {
   fields: [
     { name: 'name', type: 'text' },
     {
+      name: 'accountStatus',
+      type: 'select',
+      required: true,
+      defaultValue: 'active',
+      options: [
+        { label: 'Active', value: 'active' },
+        { label: 'Suspended', value: 'suspended' },
+      ],
+      access: { update: ({ req }) => (req.user as { role?: string } | null)?.role === 'admin' },
+      admin: {
+        position: 'sidebar',
+        description: 'Suspended accounts cannot access protected aviation documents.',
+      },
+    },
+    {
       name: 'role',
       type: 'select',
       required: true,
